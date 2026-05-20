@@ -11,7 +11,10 @@ public class Queue
     private Person back;
     
     public Queue(){
-        System.out.println("This is a code change.");
+        boolean teacher = true;
+        int arrivalTime = 45;
+        Person person = new Person(teacher, arrivalTime);
+        enqueue(person);
     }
     
     public boolean queueEmpty(){

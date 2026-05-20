@@ -7,7 +7,7 @@
  */
 public class Person
 {
-    private boolean occupation = false;
+    private boolean teacher = false;
     private int arrivalTime;
     private Person behind;
     
@@ -15,8 +15,8 @@ public class Person
         
     }
     
-    public Person(boolean occupation, int arrivalTime){
-        this.occupation = occupation;
+    public Person(boolean teacher, int arrivalTime){
+        this.teacher = teacher;
         this.arrivalTime = arrivalTime;
     }
     
@@ -28,8 +28,8 @@ public class Person
         return this.behind;
     }
     
-    public boolean getOccupation(){
-        return this.occupation;
+    public boolean getTeacher(){
+        return this.teacher;
     }
     
     public int getArrivalTime(){
