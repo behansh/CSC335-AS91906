@@ -11,7 +11,7 @@ public class Queue
     private Person back;
     
     public Queue(){
-        
+        System.out.println("This is a code change.");
     }
     
     public boolean queueEmpty(){
