@@ -3,7 +3,7 @@
  * Contains and manages the queue of students and teachers.
  *
  * @Se Behan
- * @15/05/2026
+ * @22/05/2026
  */
 public class Queue
 {
@@ -11,10 +11,7 @@ public class Queue
     private Person back;
     
     public Queue(){
-        boolean teacher = true;
-        int arrivalTime = 45;
-        Person person = new Person(teacher, arrivalTime);
-        enqueue(person);
+        
     }
     
     public boolean queueEmpty(){
@@ -31,7 +28,7 @@ public class Queue
             front = person;
             back = person;
         }else{
-            back.addBehind(person);
+            back.setBehind(person);
             back = person;
         }
     }

@@ -3,10 +3,11 @@
  * Contains information about a specfic person in the queue.
  *
  * @Se Behan
- * @15/05/2026
+ * @22/05/2026
  */
 public class Person
 {
+    private String name = "";
     private boolean teacher = false;
     private int arrivalTime;
     private Person behind;
@@ -15,12 +16,13 @@ public class Person
         
     }
     
-    public Person(boolean teacher, int arrivalTime){
+    public Person(String name, boolean teacher, int arrivalTime){
+        this.name = name;
         this.teacher = teacher;
         this.arrivalTime = arrivalTime;
     }
     
-    public void addBehind(Person person){
+    public void setBehind(Person person){
         this.behind = person;
     }
     
