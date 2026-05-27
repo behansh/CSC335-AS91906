@@ -14,14 +14,21 @@ public class Cafeteria
 {
     private Queue teacherQueue = new Queue();
     private Queue studentQueue = new Queue();
-    private ArrayList<Person> people = new ArrayList<Person>();
     public Cafeteria(){
         getConfig();
     }
     
+    public Person cafeDequeue(){
+        if(teacherQueue.queueEmpty() == true){
+            return studentQueue.dequeue();
+        }else{
+            return teacherQueue.dequeue();
+        }
+    }
+    
     public void getConfig(){
         String fileName = "cfg.txt";
-        System.out.println("What is the name of the config file? Leave blank to use default.");
+        //System.out.println("What is the name of the config file? Leave blank to use default.");
         //add code to change file name.
         File configFile = new File(fileName);
         try{
@@ -35,7 +42,12 @@ public class Cafeteria
                     teacher = true;
                 }
                 int arrivalTime = Integer.parseInt(info[2]);
-                people.add(new Person(name, teacher, arrivalTime));
+                Person person = new Person(name, teacher, arrivalTime);
+                if(person.getTeacher() == true){
+                    teacherQueue.enqueue(person);
+                }else{
+                    studentQueue.enqueue(person);
+                }
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");
