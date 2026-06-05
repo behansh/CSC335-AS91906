@@ -10,14 +10,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 public class Cafeteria
 {
     private Queue teacherQueue = new Queue();
     private Queue studentQueue = new Queue();
+    public ArrayList<Person> line = new ArrayList<Person>();
     public Cafeteria(){
         getConfig();
+        boolean teacherSkip = true;
+
     }
-    
+
     public Person cafeDequeue(){
         if(teacherQueue.queueEmpty() == true){
             return studentQueue.dequeue();
@@ -25,7 +29,7 @@ public class Cafeteria
             return teacherQueue.dequeue();
         }
     }
-    
+
     public void getConfig(){
         String fileName = "cfg.txt";
         //System.out.println("What is the name of the config file? Leave blank to use default.");
@@ -43,15 +47,12 @@ public class Cafeteria
                 }
                 int arrivalTime = Integer.parseInt(info[2]);
                 Person person = new Person(name, teacher, arrivalTime);
-                if(person.getTeacher() == true){
-                    teacherQueue.enqueue(person);
-                }else{
-                    studentQueue.enqueue(person);
-                }
+                line.add(person);
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");
             e.printStackTrace();
         }
+        line.sort(Comparator.comparing(Person::getArrivalTime));//Sorts by arrival time
     }
 }
