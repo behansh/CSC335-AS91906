@@ -3,7 +3,7 @@
  * Holds the teacher and student queues.
  *
  * @Se Behan
- * @22/05/2026
+ * @05/06/2026
  */
 import java.util.Scanner;
 import java.io.File;
@@ -14,17 +14,33 @@ import java.util.Comparator;
 public class Cafeteria
 {
     private Queue teacherQueue = new Queue();
-    private Queue studentQueue = new Queue();
+    private Queue normalQueue = new Queue();
     public ArrayList<Person> line = new ArrayList<Person>();
     public Cafeteria(){
         getConfig();
         boolean teacherSkip = true;
+        cafeEnqueue(teacherSkip);
+    }
 
+    public void cafeEnqueue(boolean teacherSkip){
+        if(teacherSkip == true){
+            for(int i = 0;i < line.size();i++){
+                if(line.get(i).getTeacher() == true){
+                    teacherQueue.enqueue(line.get(i));
+                }else{
+                    normalQueue.enqueue(line.get(i));
+                }
+            }
+        }else{
+            for(int i = 0;i < line.size();i++){
+                normalQueue.enqueue(line.get(i));
+            }
+        }
     }
 
     public Person cafeDequeue(){
         if(teacherQueue.queueEmpty() == true){
-            return studentQueue.dequeue();
+            return normalQueue.dequeue();
         }else{
             return teacherQueue.dequeue();
         }

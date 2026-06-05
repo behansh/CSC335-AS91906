@@ -3,7 +3,7 @@
  * Contains information about a specfic person in the queue.
  *
  * @Se Behan
- * @22/05/2026
+ * @05/06/2026
  */
 public class Person
 {
