@@ -16,10 +16,15 @@ public class Cafeteria
     private Queue teacherQueue = new Queue();
     private Queue normalQueue = new Queue();
     public ArrayList<Person> line = new ArrayList<Person>();
+    public int timePassed = 0;
+    public int lastTime = 0;
     public Cafeteria(){
         getConfig();
         boolean teacherSkip = true;
         cafeEnqueue(teacherSkip);
+        Person person = cafeDequeue();
+        lastTime = person.getArrivalTime();
+        timePassed += (person.getArrivalTime() - lastTime);
     }
 
     public void cafeEnqueue(boolean teacherSkip){
