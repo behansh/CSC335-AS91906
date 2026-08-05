@@ -106,6 +106,9 @@ public class Cafeteria
         String fileName = "cfg.txt";
         //System.out.println("What is the name of the config file? Leave blank to use default.");
         //add code to change file name.
+        int errors = 0;
+        ArrayList<Person> peopleErrors = new ArrayList<Person>();
+        
         File configFile = new File(fileName);
         try{
             Scanner reader = new Scanner(configFile);
@@ -114,18 +117,35 @@ public class Cafeteria
                 String[] info = infoLine.split(";");
                 String name = info[0];
                 boolean teacher = false;
-                if(Integer.parseInt(info[1]) == 1){
+                if(Integer.parseInt(info[1]) >= 1){
                     teacher = true;
                 }
                 int arrivalTime = Integer.parseInt(info[2]);
-                Person person = new Person(name, teacher, arrivalTime);
-                line.add(person);
-                totalQueueSize++;
+                if(arrivalTime > 3570){
+                    errors++;
+                    Person person = new Person(name, teacher, arrivalTime);
+                    peopleErrors.add(person);
+                }else if(arrivalTime < 0){
+                    errors++;
+                    Person person = new Person(name, teacher, arrivalTime);
+                    peopleErrors.add(person);
+                }else{
+                    Person person = new Person(name, teacher, arrivalTime);
+                    line.add(person);
+                    totalQueueSize++;
+                }
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");
             e.printStackTrace();
         }
         line.sort(Comparator.comparing(Person::getArrivalTime));//Sorts by arrival time
+        if(errors > 0){
+            System.out.println("There were " + errors + " errors in the cfg file.");
+            System.out.println("These people were excluded from the simulation:");
+            for(Person person : peopleErrors){
+                System.out.println(person.getName());
+            }
+        }
     }
 }

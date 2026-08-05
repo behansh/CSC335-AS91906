@@ -36,6 +36,10 @@ public class Person
         return this.waitTime;
     }
     
+    public String getName(){
+        return this.name;
+    }
+    
     public void setBehind(Person person){
         this.behind = person;
     }
