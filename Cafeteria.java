@@ -15,39 +15,90 @@ public class Cafeteria
 {
     private Queue teacherQueue = new Queue();
     private Queue normalQueue = new Queue();
+    public int totalQueueSize = 0;
     public ArrayList<Person> line = new ArrayList<Person>();
-    public int timePassed = 0;
-    public int lastTime = 0;
+    public ArrayList<Person> allPeople = new ArrayList<Person>();
+    public int currentTime = 0;
     public Cafeteria(){
         getConfig();
+        cafeEnqueue();
         boolean teacherSkip = true;
-        cafeEnqueue(teacherSkip);
-        Person person = cafeDequeue();
-        lastTime = person.getArrivalTime();
-        timePassed += (person.getArrivalTime() - lastTime);
+        cafeRun(teacherSkip);
+
+        teacherQueue = new Queue();
+        normalQueue = new Queue();
+        allPeople.clear();
+        currentTime = 0;
+        cafeEnqueue();
+        teacherSkip = false;
+        cafeRun(teacherSkip);
+
     }
 
-    public void cafeEnqueue(boolean teacherSkip){
-        if(teacherSkip == true){
-            for(int i = 0;i < line.size();i++){
-                if(line.get(i).getTeacher() == true){
-                    teacherQueue.enqueue(line.get(i));
-                }else{
-                    normalQueue.enqueue(line.get(i));
-                }
+    public void cafeRun(boolean teacherSkip){
+        currentTime = 0;
+        allPeople.clear();
+        int peopleServed = 0;
+        int servingTime = 30;
+        while(peopleServed < totalQueueSize){
+            Person person = cafeDequeue(teacherSkip);
+            if(currentTime < person.getArrivalTime()){
+                currentTime = person.getArrivalTime();
             }
-        }else{
-            for(int i = 0;i < line.size();i++){
+            person.setServedTime(currentTime);
+            person.setWaitTime(currentTime - person.getArrivalTime());
+            allPeople.add(person);
+            currentTime += servingTime;
+            peopleServed++;
+        }
+        int studentTotal = 0;
+        int studentCount = 0;
+        int teacherTotal = 0;
+        int teacherCount = 0;
+        for(Person person : allPeople){
+            if(person.getTeacher() == true){
+                teacherTotal += person.getWaitTime();
+                teacherCount++;
+            }else{
+                studentTotal += person.getWaitTime();
+                studentCount++;
+            }
+        }
+        double avgStudentTime = (double) studentTotal / studentCount;
+        double avgTeacherTime = (double) teacherTotal / teacherCount;
+        System.out.println("The average student wait time is " + avgStudentTime);
+        System.out.println("The average teacher wait time is " + avgTeacherTime);
+    }
+
+    public void cafeEnqueue(){
+        for(int i = 0;i < line.size();i++){
+            if(line.get(i).getTeacher() == true){
+                teacherQueue.enqueue(line.get(i));
+            }else{
                 normalQueue.enqueue(line.get(i));
             }
         }
     }
 
-    public Person cafeDequeue(){
-        if(teacherQueue.queueEmpty() == true){
-            return normalQueue.dequeue();
+    public Person cafeDequeue(boolean teacherSkip){
+        if(teacherSkip == true){
+            if(teacherQueue.queueEmpty() == true){
+                return normalQueue.dequeue();
+            }else{
+                return teacherQueue.dequeue();
+            }
         }else{
-            return teacherQueue.dequeue();
+            if(teacherQueue.queueEmpty()){
+                return normalQueue.dequeue();
+            }
+            if(normalQueue.queueEmpty()){
+                return teacherQueue.dequeue();
+            }
+            if(teacherQueue.getFront().getArrivalTime() <= normalQueue.getFront().getArrivalTime()){
+                return teacherQueue.dequeue();
+            } else {
+                return normalQueue.dequeue();
+            }
         }
     }
 
@@ -69,6 +120,7 @@ public class Cafeteria
                 int arrivalTime = Integer.parseInt(info[2]);
                 Person person = new Person(name, teacher, arrivalTime);
                 line.add(person);
+                totalQueueSize++;
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");

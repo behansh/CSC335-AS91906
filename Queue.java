@@ -18,6 +18,10 @@ public class Queue
         */
     }
     
+    public Person getFront(){
+        return this.front;
+    }
+    
     public boolean queueEmpty(){
         boolean isEmpty = false;
         if(front == null && back == null){

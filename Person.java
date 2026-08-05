@@ -9,7 +9,9 @@ public class Person
 {
     private String name = "";
     private boolean teacher = false;
-    private int arrivalTime;
+    private int arrivalTime = 0;
+    private int servedTime = 0;
+    private int waitTime = 0;
     private Person behind;
     
     public Person(){
@@ -20,6 +22,18 @@ public class Person
         this.name = name;
         this.teacher = teacher;
         this.arrivalTime = arrivalTime;
+    }
+    
+    public void setServedTime(int servedTime){
+        this.servedTime = servedTime;
+    }
+    
+    public void setWaitTime(int waitTime){
+        this.waitTime = waitTime;
+    }
+    
+    public int getWaitTime(){
+        return this.waitTime;
     }
     
     public void setBehind(Person person){
