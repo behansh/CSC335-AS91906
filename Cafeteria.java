@@ -39,6 +39,11 @@ public class Cafeteria
     }
 
     public void cafeRun(boolean teacherSkip){
+        if(teacherSkip == true){
+            System.out.println("These are the statistics for if the teachers skip the queue.");
+        }else{
+            System.out.println("These are the statistics for if the teachers stay in the queue with the students.");
+        }
         currentTime = 0;
         allPeople.clear();
         numberServed = new int[60];
@@ -81,6 +86,10 @@ public class Cafeteria
         for (int i = 0; i < 60; i++) {
             System.out.println(i + "\t" + studentArrivals[i] + "\t\t" + teacherArrivals[i] + "\t\t" + numberServed[i]);
         }
+        for(int i = 0;i<10;i++){
+            System.out.println();
+        }
+        
     }
 
     public void cafeEnqueue(){
@@ -147,17 +156,18 @@ public class Cafeteria
                     Person person = new Person(name, teacher, arrivalTime);
                     peopleErrors.add(person);
                 }else{
+                    int minute = arrivalTime / 60;
+                    if(teacher == true){
+                        teacherArrivals[minute]++;
+                    }else{
+                        studentArrivals[minute]++;
+                    }
+                    
                     Person person = new Person(name, teacher, arrivalTime);
                     line.add(person);
                     totalQueueSize++;
                 }
-                int minute = arrivalTime / 60;
-
-                if(teacher == true){
-                    teacherArrivals[minute]++;
-                }else{
-                    studentArrivals[minute]++;
-                }
+                
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");

@@ -11,11 +11,7 @@ public class Queue
     private Person back;
     
     public Queue(){
-        /*Person person1 = new Person("Se", false, 120);
-        enqueue(person1);
-        Person person2 = new Person("Tom", true,180);
-        enqueue(person2);
-        */
+        
     }
     
     public Person getFront(){
