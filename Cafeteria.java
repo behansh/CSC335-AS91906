@@ -19,6 +19,9 @@ public class Cafeteria
     public ArrayList<Person> line = new ArrayList<Person>();
     public ArrayList<Person> allPeople = new ArrayList<Person>();
     public int currentTime = 0;
+    public int[] studentArrivals = new int[60];
+    public int[] teacherArrivals = new int[60];
+    public int[] numberServed = new int[60];
     public Cafeteria(){
         getConfig();
         cafeEnqueue();
@@ -38,6 +41,7 @@ public class Cafeteria
     public void cafeRun(boolean teacherSkip){
         currentTime = 0;
         allPeople.clear();
+        numberServed = new int[60];
         int peopleServed = 0;
         int servingTime = 30;
         while(peopleServed < totalQueueSize){
@@ -47,6 +51,10 @@ public class Cafeteria
             }
             person.setServedTime(currentTime);
             person.setWaitTime(currentTime - person.getArrivalTime());
+            int minute = currentTime / 60;
+            if(minute < numberServed.length){
+                numberServed[minute]++;
+            }
             allPeople.add(person);
             currentTime += servingTime;
             peopleServed++;
@@ -64,10 +72,15 @@ public class Cafeteria
                 studentCount++;
             }
         }
-        double avgStudentTime = (double) studentTotal / studentCount;
-        double avgTeacherTime = (double) teacherTotal / teacherCount;
-        System.out.println("The average student wait time is " + avgStudentTime);
-        System.out.println("The average teacher wait time is " + avgTeacherTime);
+        double avgStudentTime = (studentTotal / studentCount) / 60;
+        double avgTeacherTime = (teacherTotal / teacherCount) / 60;
+        System.out.println("The average student wait time is " + avgStudentTime + " minutes.");
+        System.out.println("The average teacher wait time is " + avgTeacherTime + " minutes.");
+        System.out.println();
+        System.out.println("Minute" + "   " + "Students" + "   " + "Teachers" + "   " + "Served");
+        for (int i = 0; i < 60; i++) {
+            System.out.println(i + "\t" + studentArrivals[i] + "\t\t" + teacherArrivals[i] + "\t\t" + numberServed[i]);
+        }
     }
 
     public void cafeEnqueue(){
@@ -108,7 +121,7 @@ public class Cafeteria
         //add code to change file name.
         int errors = 0;
         ArrayList<Person> peopleErrors = new ArrayList<Person>();
-        
+
         File configFile = new File(fileName);
         try{
             Scanner reader = new Scanner(configFile);
@@ -133,6 +146,13 @@ public class Cafeteria
                     Person person = new Person(name, teacher, arrivalTime);
                     line.add(person);
                     totalQueueSize++;
+                }
+                int minute = arrivalTime / 60;
+
+                if(teacher == true){
+                    teacherArrivals[minute]++;
+                }else{
+                    studentArrivals[minute]++;
                 }
             }
         }catch(IOException e){
