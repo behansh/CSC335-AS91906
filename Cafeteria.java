@@ -19,9 +19,9 @@ public class Cafeteria
     public ArrayList<Person> line = new ArrayList<Person>();
     public ArrayList<Person> allPeople = new ArrayList<Person>();
     public int currentTime = 0;
-    public int[] studentArrivals = new int[60];
-    public int[] teacherArrivals = new int[60];
-    public int[] numberServed = new int[60];
+    public int[] studentArrivals = new int[61];
+    public int[] teacherArrivals = new int[61];
+    public int[] numberServed = new int[61];
     public Cafeteria(){
         getConfig();
         cafeEnqueue();
@@ -98,7 +98,11 @@ public class Cafeteria
             if(teacherQueue.queueEmpty() == true){
                 return normalQueue.dequeue();
             }else{
-                return teacherQueue.dequeue();
+                if(teacherQueue.getFront().getArrivalTime() > currentTime){
+                    return normalQueue.dequeue();
+                }else{
+                    return teacherQueue.dequeue();
+                }
             }
         }else{
             if(teacherQueue.queueEmpty()){
