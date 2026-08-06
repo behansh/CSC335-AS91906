@@ -19,9 +19,9 @@ public class Cafeteria
     public ArrayList<Person> line = new ArrayList<Person>();
     public ArrayList<Person> allPeople = new ArrayList<Person>();
     public int currentTime = 0;
-    public int[] studentArrivals = new int[61];
-    public int[] teacherArrivals = new int[61];
-    public int[] numberServed = new int[61];
+    public int[] studentArrivals = new int[60];
+    public int[] teacherArrivals = new int[60];
+    public int[] numberServed = new int[60];
     public Cafeteria(){
         getConfig();
         cafeEnqueue();
@@ -64,6 +64,8 @@ public class Cafeteria
             currentTime += servingTime;
             peopleServed++;
         }
+        
+        
         int studentTotal = 0;
         int studentCount = 0;
         int teacherTotal = 0;
@@ -77,10 +79,24 @@ public class Cafeteria
                 studentCount++;
             }
         }
-        double avgStudentTime = (studentTotal / studentCount) / 60;
-        double avgTeacherTime = (teacherTotal / teacherCount) / 60;
-        System.out.println("The average student wait time is " + avgStudentTime + " minutes.");
-        System.out.println("The average teacher wait time is " + avgTeacherTime + " minutes.");
+        double avgStudentTimeSeconds = (studentTotal / studentCount);
+        double avgTeacherTimeSeconds = (teacherTotal / teacherCount);
+        
+        double avgStudentTimeMinutes = avgStudentTimeSeconds / 60;
+        double avgTeacherTimeMinutes = avgTeacherTimeSeconds / 60;
+        if(avgStudentTimeSeconds >= 60){
+            System.out.println("The average student wait time is " + Math.round(avgStudentTimeMinutes * 100) / 100 + " minutes.");
+        }else{
+            System.out.println("The average student wait time is " + Math.round(avgStudentTimeSeconds * 100) / 100 + " seconds.");
+        }
+        
+        if(avgTeacherTimeSeconds >= 60){
+            System.out.println("The average teacher wait time is " + Math.round(avgTeacherTimeMinutes * 100) / 100 + " minutes.");
+        }else{
+            System.out.println("The average teacher wait time is " + Math.round(avgTeacherTimeSeconds * 100) / 100 + " seconds.");
+        }
+        
+        
         System.out.println();
         System.out.println("Minute" + "   " + "Students" + "   " + "Teachers" + "   " + "Served");
         for (int i = 0; i < 60; i++) {
@@ -89,7 +105,7 @@ public class Cafeteria
         for(int i = 0;i<10;i++){
             System.out.println();
         }
-        
+
     }
 
     public void cafeEnqueue(){
@@ -138,36 +154,40 @@ public class Cafeteria
         File configFile = new File(fileName);
         try{
             Scanner reader = new Scanner(configFile);
-            while(reader.hasNextLine()){
-                String infoLine = reader.nextLine();
-                String[] info = infoLine.split(";");
-                String name = info[0];
-                boolean teacher = false;
-                if(Integer.parseInt(info[1]) >= 1){
-                    teacher = true;
-                }
-                int arrivalTime = Integer.parseInt(info[2]);
-                if(arrivalTime > 3570){
-                    errors++;
-                    Person person = new Person(name, teacher, arrivalTime);
-                    peopleErrors.add(person);
-                }else if(arrivalTime < 0){
-                    errors++;
-                    Person person = new Person(name, teacher, arrivalTime);
-                    peopleErrors.add(person);
-                }else{
-                    int minute = arrivalTime / 60;
-                    if(teacher == true){
-                        teacherArrivals[minute]++;
-                    }else{
-                        studentArrivals[minute]++;
+            if(!reader.hasNextLine()){
+                System.out.println("There is a blank line in the cfg file. Please remove it so that the file can be read.");
+            }else{
+                while(reader.hasNextLine()){
+                    String infoLine = reader.nextLine();
+                    String[] info = infoLine.split(";");
+                    String name = info[0];
+                    boolean teacher = false;
+                    if(Integer.parseInt(info[1]) >= 1){
+                        teacher = true;
                     }
-                    
-                    Person person = new Person(name, teacher, arrivalTime);
-                    line.add(person);
-                    totalQueueSize++;
+                    int arrivalTime = Integer.parseInt(info[2]);
+                    if(arrivalTime > 3570){
+                        errors++;
+                        Person person = new Person(name, teacher, arrivalTime);
+                        peopleErrors.add(person);
+                    }else if(arrivalTime < 0){
+                        errors++;
+                        Person person = new Person(name, teacher, arrivalTime);
+                        peopleErrors.add(person);
+                    }else{
+                        int minute = arrivalTime / 60;
+                        if(teacher == true){
+                            teacherArrivals[minute]++;
+                        }else{
+                            studentArrivals[minute]++;
+                        }
+
+                        Person person = new Person(name, teacher, arrivalTime);
+                        line.add(person);
+                        totalQueueSize++;
+                    }
+
                 }
-                
             }
         }catch(IOException e){
             System.out.println("There was a file reading error.");
