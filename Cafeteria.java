@@ -1,9 +1,9 @@
 
 /**
- * Holds the teacher and student queues.
+ * Holds the teacher and student queues and runs the whole program.
  *
  * @Se Behan
- * @05/06/2026
+ * @07/08/2026
  */
 import java.util.Scanner;
 import java.io.File;
